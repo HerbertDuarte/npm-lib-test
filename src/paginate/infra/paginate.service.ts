@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { PaginateException } from '../exceptions/paginate.exception';
-import { PrismaClient } from '@prisma/client';
+import { Inject, Injectable, Logger } from "@nestjs/common";
+import { PaginateException } from "../exceptions/paginate.exception";
+import { PrismaClient } from "@prisma/client";
 
 export interface PaginateProps {
   module: string;
@@ -20,9 +20,12 @@ export interface PaginateResponse<T> {
 
 @Injectable()
 export class PaginateService<T> {
-  private readonly logger = new Logger('PaginateService');
+  private readonly logger = new Logger("PaginateService");
 
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    @Inject("PrismaClient")
+    private readonly prisma: PrismaClient,
+  ) {}
 
   async paginate({
     module,
@@ -37,7 +40,9 @@ export class PaginateService<T> {
     try {
       const skip = itensPorPagina * (pagina - 1);
       const query = this.buildQuery({ busca, buscaPor, queries });
-      const totalItens = await this.prisma[module].count({ where: query });
+      const totalItens = await this.prisma[module].count({
+        where: query,
+      });
 
       if (totalItens === 0) {
         return { data: [], maxPag: 0 };
@@ -55,7 +60,7 @@ export class PaginateService<T> {
 
       return { data: itens, maxPag: maxPaginas };
     } catch (error) {
-      this.logger.error('Erro na paginação', error.message);
+      this.logger.error("Erro na paginação", error.message);
       throw new PaginateException(error.message);
     }
   }
@@ -69,11 +74,11 @@ export class PaginateService<T> {
     buscaPor?: string;
     queries?: Record<string, any>;
   }): Record<string, any> {
-    const parametroDeBusca = buscaPor ?? 'nome';
+    const parametroDeBusca = buscaPor ?? "nome";
     let query: Record<string, any> = {
       [parametroDeBusca]: {
         contains: busca,
-        mode: 'insensitive',
+        mode: "insensitive",
       },
     };
 
