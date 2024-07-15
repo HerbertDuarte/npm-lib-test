@@ -6,6 +6,9 @@
   "main": "dist/main.js",
   "module": "dist/main.js",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/HerbertDuarte/npm-lib-test"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
