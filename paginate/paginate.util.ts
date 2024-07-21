@@ -1,12 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { PaginateException } from "../exceptions/paginate.exception";
+import { PaginateException } from "./exceptions/paginate.exception";
 import { PrismaClient } from "@prisma/client";
+import { IPaginateUtil } from "./paginate.util.interface";
 
 export interface PaginateProps {
   module: string;
-  busca: string;
   pagina: number;
   itensPorPagina: number;
+  busca?: string;
   queries?: Record<string, any>;
   include?: Record<string, any>;
   buscaPor?: string;
@@ -19,7 +20,7 @@ export interface PaginateResponse<T> {
 }
 
 @Injectable()
-export class PaginateUtil<T> {
+export class PaginateUtil<T> implements IPaginateUtil<T> {
   private readonly logger = new Logger("PaginateService");
   private prisma: PrismaClient;
   constructor(prisma: PrismaClient) {
@@ -69,18 +70,21 @@ export class PaginateUtil<T> {
     buscaPor,
     queries,
   }: {
-    busca: string;
+    busca?: string;
     buscaPor?: string;
     queries?: Record<string, any>;
   }): Record<string, any> {
     const parametroDeBusca = buscaPor ?? "nome";
-    let query: Record<string, any> = {
-      [parametroDeBusca]: {
-        contains: busca,
-        mode: "insensitive",
-      },
-    };
+    let query: Record<string, any>;
 
+    if (busca && buscaPor) {
+      query = {
+        [parametroDeBusca]: {
+          contains: busca,
+          mode: "insensitive",
+        },
+      };
+    }
     if (queries) {
       query = { ...query, ...queries };
     }
