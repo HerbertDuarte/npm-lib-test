@@ -1,6 +1,6 @@
 {
   "name": "lib-test-herbert",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lib de teste do NestJS",
   "author": "Herbert Duarte",
   "main": "dist/main.js",
