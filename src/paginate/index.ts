@@ -1,4 +1,3 @@
-import { PaginateException } from './exceptions/paginate.exception';
-import { PaginateModule } from './infra/paginate.module';
-import { PaginateService } from './infra/paginate.service';
-export { PaginateException, PaginateModule, PaginateService };
+import { PaginateException } from "./exceptions/paginate.exception";
+import { PaginateUtil } from "./infra/paginate.service";
+export { PaginateException, PaginateUtil };

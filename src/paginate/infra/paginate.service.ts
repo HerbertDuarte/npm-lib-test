@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PaginateException } from "../exceptions/paginate.exception";
 import { PrismaClient } from "@prisma/client";
 
@@ -19,15 +19,14 @@ export interface PaginateResponse<T> {
 }
 
 @Injectable()
-export class PaginateService<T> {
+export class PaginateUtil<T> {
   private readonly logger = new Logger("PaginateService");
+  private prisma: PrismaClient;
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
+  }
 
-  constructor(
-    @Inject("PrismaClient")
-    private readonly prisma: PrismaClient,
-  ) {}
-
-  async paginate({
+  async execute({
     module,
     busca,
     pagina = 1,
